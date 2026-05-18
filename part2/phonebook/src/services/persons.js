@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseurl="http://localhost:3001/persons"
+const baseurl="/api/persons"
 
 const add = (newObject) =>{
    return axios.post(baseurl, newObject).then(response => response.data)
