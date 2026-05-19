@@ -1,5 +1,6 @@
 const express = require("express")
 const morgan = require("morgan")
+const path = require("path")
 const app = express()
 app.use(express.json())
 morgan.token('postToken', (req, res) =>{
@@ -10,7 +11,8 @@ morgan.token('postToken', (req, res) =>{
 
 app.use( morgan(':method :url :status :res[content-length] - :response-time ms :postToken'))
 
-app.use(express.static('dist'))
+app.use(express.static(path.join(__dirname,'dist')))
+
 
 let persons = [
     { 
@@ -100,7 +102,9 @@ app.post("/api/persons", (req, res)=>{
 })
 
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
+if (!process.env.VERCEL){
 app.listen(PORT, ()=>{
     console.log("listening on port 3001");
-})
+})}
+module.exports = app
