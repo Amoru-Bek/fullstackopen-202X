@@ -1,8 +1,0 @@
-flowchart TB
-    A["The user visiting the /spa end point"] -- <br> --> B["A GET request sended to the server"]
-    B --> n1@{ label: "<span style=\"background-color:\">The server recieve the request and send the /spa content</span>" }
-    n1 --> n2["The page appears in front of the user ."]
-
-    B@{ shape: rounded}
-    n1@{ shape: rect}
-    n2@{ shape: rect}
