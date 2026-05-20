@@ -36,17 +36,14 @@ const App = () => {
       if (
         window.confirm(
           newName +
-            " is already added to phonebook, replace the old number with a new one ?",
+            "is already added to phonebook, replace the old number with a new one ?",
         )
       ) {
         personServices.update(changedPerson,existingPerson.id)
-        .then(()=>{
-          fetchPersons()
-          setMessage(existingPerson.name+" Number have updated successfully !")
-        })
+        .then(fetchPersons)
         .catch( () =>
           {setMessage("Information of "+existingPerson.name + " have already been removed from the server")
-          fetchPersons()}
+          fetchPersons}
         )
       }
     }
@@ -94,14 +91,7 @@ const App = () => {
 
   const handledelete = (name, id) => {
     if (window.confirm("Delete " + name + "?")) {
-      personServices.Delete(id).then(()=>{
-        fetchPersons();
-        setMessage(`Deleted ${name}`)
-        setTimeout(() => {
-          setMessage(null)
-        }, 3000);
-
-      });
+      personServices.Delete(id).then(fetchPersons);
     }
   };
 

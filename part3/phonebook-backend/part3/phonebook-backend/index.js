@@ -66,27 +66,6 @@ app.delete("/api/persons/:id", (req, res)=>{
   res.status(204).end() 
 })
 
-app.put("/api/persons/:id", (req, res) => {
-  const id = req.params.id
-  const body = req.body
-
-  if (!body.number) {
-    return res.status(400).json({
-      error: "missing phone number"
-    })
-  }
-    
-  const personIndex = persons.findIndex(p => p.id === id)
-  if(personIndex !== -1){
-  const updatedPerson = {...persons[personIndex], number : body.number }
-  persons[personIndex] = updatedPerson
-  console.log(updatedPerson)
-  res.json(updatedPerson)}
-  else {
-  res.status(400).end()
-}
-}
-)
 
 app.post("/api/persons", (req, res)=>{
     const body = req.body
@@ -111,7 +90,7 @@ app.post("/api/persons", (req, res)=>{
         error : "number must be unique"
       })
     }
-    const id = Math.floor(Math.random()*100).toString()
+    const id = Math.floor(Math.random()*100)
     const person = {
         name : `${body.name}`,
         number: `${body.number}`,
