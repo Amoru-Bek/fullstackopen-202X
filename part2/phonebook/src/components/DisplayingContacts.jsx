@@ -14,7 +14,6 @@ const DisplayingContacts = (props) => {
           <button onClick={() => props.handledelete(person.name,person.id)}>Delete</button>
         </div>
       ))}
-      ... debug: {props.newName}
     </>
   );
 };

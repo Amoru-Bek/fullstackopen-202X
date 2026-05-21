@@ -43,11 +43,17 @@ const App = () => {
         .then(()=>{
           fetchPersons()
           setMessage(existingPerson.name+" Number have updated successfully !")
+          setTimeout(()=>{
+            setMessage(null)
+          }, 3000)
         })
-        .catch( () =>
-          {setMessage("Information of "+existingPerson.name + " have already been removed from the server")
-          fetchPersons()}
-        )
+        .catch( () => {
+          setMessage("Information of "+existingPerson.name + " have already been removed from the server")
+          fetchPersons()
+          setTimeout(()=>{
+            setMessage(null)
+          }, 3000)
+        })
       }
     }
     else

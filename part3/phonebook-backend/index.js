@@ -1,7 +1,9 @@
 const express = require("express")
 const morgan = require("morgan")
+const cors = require("cors")
 const path = require("path")
 const app = express()
+app.use(cors())
 app.use(express.json())
 morgan.token('postToken', (req, res) =>{
   return req.body && Object.keys(req.body).length 
@@ -91,19 +93,19 @@ app.put("/api/persons/:id", (req, res) => {
 app.post("/api/persons", (req, res)=>{
     const body = req.body
     console.log(body);
-    if (!body.name){
-      res.status(400).json({
+    if (!body.name || body.name.trim() === ""){
+      return res.status(400).json({
         error : "missing name attribute"
-      }).end()
+      })
     }
-    if (!body.number || body.number == "" ){
-      res.status(400).json({
-        error : "missing number attribute"
-      }).end()
-    }
-    if (body.number === "" ){
+    if (!body.number || body.number.trim() === "" ){
       return res.status(400).json({
         error : "missing number attribute"
+      })
+    }
+    if (persons.some(p => p.name.toLowerCase() === body.name.toLowerCase())){
+      return res.status(400).json({
+        error : "name must be unique"
       })
     }
     if (persons.some(p => p.number === body.number)){
@@ -111,15 +113,14 @@ app.post("/api/persons", (req, res)=>{
         error : "number must be unique"
       })
     }
-    const id = Math.floor(Math.random()*100).toString()
+    const id = Math.floor(Math.random() * 1000000).toString()
     const person = {
-        name : `${body.name}`,
-        number: `${body.number}`,
+        name : body.name,
+        number: body.number,
         id : id
     } 
     persons = persons.concat(person)
     res.json(person)
-   
 })
 
 
