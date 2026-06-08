@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Search from "./components/search";
-import Notification from "./components/Notification"
+import Notification from "./components/Notification";
 import Addperson from "./components/Addperson";
 import DisplayingContacts from "./components/DisplayingContacts";
 import axios from "axios";
@@ -10,9 +10,9 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-  const [searchVaule, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const [showSearch, setShowSearch] = useState(false);
-  const [message,setMessage]= useState(null);
+  const [message, setMessage] = useState(null);
 
   const fetchPersons = () => {
     personServices.getAll().then((persons) => {
@@ -29,47 +29,60 @@ const App = () => {
       return;
     }
 
-    const existingPerson = persons.find(p => p.name === newName)
+    const existingPerson = persons.find((p) => p.name === newName);
     const newObject = { name: newName, number: newNumber };
-    if (existingPerson){
-      const changedPerson = {...existingPerson, number:newNumber} 
+    if (existingPerson) {
+      const changedPerson = { ...existingPerson, number: newNumber };
       if (
         window.confirm(
           newName +
             " is already added to phonebook, replace the old number with a new one ?",
         )
       ) {
-        personServices.update(changedPerson,existingPerson.id)
-        .then(()=>{
-          fetchPersons()
-          setMessage(existingPerson.name+" Number have updated successfully !")
-          setTimeout(()=>{
-            setMessage(null)
-          }, 3000)
-        })
-        .catch( () => {
-          setMessage("Information of "+existingPerson.name + " have already been removed from the server")
-          fetchPersons()
-          setTimeout(()=>{
-            setMessage(null)
-          }, 3000)
-        })
+        personServices
+          .update(changedPerson, existingPerson.id)
+          .then(() => {
+            fetchPersons();
+            setMessage(
+              existingPerson.name + " Number have updated successfully !",
+            );
+            setTimeout(() => {
+              setMessage(null);
+            }, 3000);
+          })
+          .catch(() => {
+            setMessage(
+              "Information of " +
+                existingPerson.name +
+                " have already been removed from the server",
+            );
+            fetchPersons();
+            setTimeout(() => {
+              setMessage(null);
+            }, 3000);
+          });
       }
-    }
-    else
-      {personServices
-      .add(newObject)
-      .then(
-        (newPerson) => 
-          { setMessage("Added "+newPerson.name)
-            console.log(message)
-            setPersons(persons.concat(newPerson))
+    } else {
+      personServices
+        .add(newObject)
+        .then((newPerson) => {
+          setMessage("Added " + newPerson.name);
+          setPersons(persons.concat(newPerson));
+
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000);
+        })
+        .catch((error) => {
+          console.log(error.data);
           
-          setTimeout(()=>{
-            setMessage(null)
-          },3000)}
-      );
-}
+          setMessage(error.response?.data?.error);
+
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000);
+        });
+    }
     setNewNumber("");
     setNewName("");
   };
@@ -94,19 +107,18 @@ const App = () => {
 
   const searchResult = showSearch
     ? persons.filter((person) =>
-        person.name.toLowerCase().includes(searchVaule.toLowerCase()),
+        person.name.toLowerCase().includes(searchValue.toLowerCase()),
       )
     : persons;
 
   const handledelete = (name, id) => {
     if (window.confirm("Delete " + name + "?")) {
-      personServices.Delete(id).then(()=>{
+      personServices.Delete(id).then(() => {
         fetchPersons();
-        setMessage(`Deleted ${name}`)
+        setMessage(`Deleted ${name}`);
         setTimeout(() => {
-          setMessage(null)
+          setMessage(null);
         }, 3000);
-
       });
     }
   };
@@ -115,7 +127,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={message}></Notification>
-      <Search handleSearch={handleSearch} searchVaule={searchVaule} />
+      <Search handleSearch={handleSearch} searchValue={searchValue} />
       <h3>Add a new contact</h3>
       <Addperson
         handleAddingPerson={handleAddingPerson}
